@@ -4,7 +4,7 @@ import numpy as np
 import pytesseract
 import re
 
-pytesseract.pytesseract.tesseract_cmd = r'D:\Program Files\Tesseract\tesseract'
+# pytesseract.pytesseract.tesseract_cmd = r'D:\Program Files\Tesseract\tesseract'
 
 img = cv2.imread('pictures/plane.png', cv2.IMREAD_COLOR)
 img2 = cv2.imread('pictures/plane2.png', cv2.IMREAD_COLOR)
@@ -32,9 +32,9 @@ img_test_blur2 = cv2.threshold(cv2.bilateralFilter(img_test, 5, 75, 75), 0, 255,
 
 img_test_threshold = cv2.adaptiveThreshold(cv2.medianBlur(img_test, 3), 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
 img_test_threshold2 = cv2.adaptiveThreshold(cv2.bilateralFilter(img_test, 9, 75, 75), 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
+img_test_threshold3 = cv2.adaptiveThreshold(img_test, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 15, 12)
 
-
-# cv2.imshow('Image resized', img_resized)
+# cv2.imshow('Test', img_test_threshold2)
 # cv2.imshow('Image gray', img_gray)
 
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -44,22 +44,22 @@ gray2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
 threshold_img = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
 threshold_img2 = cv2.threshold(gray2, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
 
-# text2 = pytesseract.image_to_string(img2, config='--psm 11')
-# text_gray = pytesseract.image_to_string(gray, config='--psm 11')
-# text_gray2 = pytesseract.image_to_string(gray2, config='--psm 11')
-
-# print("Detected text:", text, "Text2", text2, "Gray", text_gray, "Gray2", text_gray2)
+threshold_img2_test = cv2.threshold(gray2, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
 
 plane_images = [img, cropped_image, threshold_img, img2, cropped_image2, gray2, threshold_img2, img_resized, img_gray]
-plane_images_test = [img_resized, img_resized_cropped, img_gray, img_gray_cropped, img_test, img_test_blur, img_test_threshold, img_test_blur2, img_test_threshold2]
+plane_image_tests = [img_resized, img_resized_cropped, img_gray, img_gray_cropped, img_test, img_test_blur, img_test_threshold, img_test_blur2, img_test_threshold2]
+image_tests = [img_test_threshold2, img_test_threshold3]
 
-for x in plane_images_test:
+for x in image_tests:
     text = pytesseract.image_to_string(x, config='--psm 11 --oem 1 -l eng')
-    # plane_number = re.search("[A-Z]{2}-[A-Z]{3}", text)
-    # if plane_number == None:
-    #     print("No plane number found")
-    # else:
+    # plane_number = re.search("[A-Z]{2}\W*-\W*[A-Z]{3}", text)
+    # test_phrase = re.search("LZ", text)
+    # if plane_number:
     #     print(plane_number.group())
+    #     if test_phrase:
+    #         print(test_phrase.group())
+    # else:
+    #     print("No plane number found")
     print(text)
     print("///////////////////////////////////////////////////////////////////")
 
